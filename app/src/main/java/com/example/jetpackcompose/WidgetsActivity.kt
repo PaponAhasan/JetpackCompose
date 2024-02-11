@@ -5,13 +5,28 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
@@ -19,6 +34,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 class WidgetsActivity : ComponentActivity() {
@@ -32,20 +48,28 @@ class WidgetsActivity : ComponentActivity() {
 
 /* ------------- Text ------------- */
 @Composable
-fun SayYourName(name: String) {
+fun SayYourName(name: String, modifier: Modifier) {
     Text(
         text = "My Name : $name",
         fontStyle = FontStyle.Italic,
         fontWeight = FontWeight.Bold,
-        color = Color.Red,
+        color = Color.Black,
         fontSize = 24.sp,
+        modifier = modifier
+            .background(Color.Cyan)
+            .size(200.dp)
+            .padding(20.dp)
+            .border(4.dp, Color.Gray)
+            .clip(CircleShape)
+            .background(Color.Yellow)
+            .clickable { }
     )
 }
 
 @Preview(showBackground = true, name = "SayName", showSystemUi = true)
 @Composable
 private fun SayYourNamePreview() {
-    SayYourName(name = "Papon")
+    SayYourName(name = "Papon", modifier = Modifier)
 }
 
 /* ------------- Image ------------- */
@@ -56,9 +80,17 @@ fun ImageShowFunction() {
         painter = painterResource(id = R.drawable.ic_360),
         contentDescription = "myImage",
         colorFilter = ColorFilter.tint(Color.Red),
-        contentScale = ContentScale.Crop
+        contentScale = ContentScale.Crop,
+        modifier = Modifier
+            .size(80.dp)
+            .background(Color.Gray)
+            .clip(CircleShape)
+            .border(2.dp, Color.LightGray, CircleShape)
+            .shadow(elevation = 20.dp)
     )
 }
+
+
 
 /* ------------- Button ------------- */
 @Preview(showBackground = true, name = "buttonClick", widthDp = 200, heightDp = 300)
@@ -79,6 +111,29 @@ private fun ButtonClickFun() {
             ),
             contentDescription = "myImage"
         )
+    }
+}
+
+@Preview
+@Composable
+private fun NotificationCounter() {
+    val count = rememberSaveable {
+        mutableIntStateOf(0)
+    }
+
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+
+    ) {
+        Text(text = "You have sent ${count.intValue} notification")
+        Button(
+            onClick = {
+                count.intValue++
+            },
+        ) {
+            Text(text = "Send Notification")
+        }
     }
 }
 
