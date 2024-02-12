@@ -10,12 +10,17 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -91,7 +96,6 @@ fun ImageShowFunction() {
 }
 
 
-
 /* ------------- Button ------------- */
 @Preview(showBackground = true, name = "buttonClick", widthDp = 200, heightDp = 300)
 @Composable
@@ -116,20 +120,50 @@ private fun ButtonClickFun() {
 
 @Preview
 @Composable
-private fun NotificationCounter() {
+fun NotificationScreen() {
     val count = rememberSaveable {
         mutableIntStateOf(0)
     }
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxSize(1f)
+            .background(Color.White)
+    ) {
+        NotificationCounter(count.intValue) { count.intValue++ }
+        MessageBar(count.intValue)
+    }
+}
+
+@Composable
+fun MessageBar(count: Int) {
+    Card(elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)) {
+        Row(
+            Modifier.padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                imageVector = Icons.Outlined.Favorite, contentDescription = "",
+                Modifier.padding(4.dp)
+            )
+            Text(text = "Messages sent so far - $count")
+        }
+    }
+}
+
+@Composable
+private fun NotificationCounter(count: Int, increment: () -> Unit) {
 
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
-        Text(text = "You have sent ${count.intValue} notification")
+        Text(text = "You have sent $count notification")
         Button(
             onClick = {
-                count.intValue++
+                increment()
             },
         ) {
             Text(text = "Send Notification")
